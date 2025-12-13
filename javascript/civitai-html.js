@@ -161,14 +161,6 @@ function BackToTop() {
 
 // Function to adjust alignment of Filter Accordion
 function adjustFilterBoxAndButtons() {
-    const element = document.querySelector("#filterBox") || document.querySelector("#filterBoxL");
-    if (!element) return;
-
-    const childDiv = element.querySelector("div:nth-child(3)");
-    if (!childDiv) return;
-
-    const isLargeScreen = window.innerWidth >= 1250;
-    const isMediumScreen = window.innerWidth < 1250 && window.innerWidth > 915;
     const isNarrowScreen = window.innerWidth < 800;
     const modelBlocks = document.querySelectorAll("#civitai_preview_html .model-block");
     const civitInfo = document.querySelector(".civitai-version-info");
@@ -190,10 +182,6 @@ function adjustFilterBoxAndButtons() {
             civitInfo.style.flexWrap = "nowrap";
         }
     }
-    
-
-    childDiv.style.marginLeft = isLargeScreen ? "0px" : isMediumScreen ? `${1250 - window.innerWidth}px` : "0px";
-    element.style.justifyContent = isLargeScreen || isMediumScreen ? "center" : "flex-start";
 
     const pageBtn1 = document.querySelector("#pageBtn1");
     const pageBtn2 = document.querySelector("#pageBtn2");
@@ -201,18 +189,18 @@ function adjustFilterBoxAndButtons() {
     const pageBoxMobile = document.querySelector("#pageBoxMobile");
 
     if (window.innerWidth < 530) {
-        childDiv.style.width = "300px";
         if (pageBoxMobile) {
             pageBtn1 && pageBoxMobile.appendChild(pageBtn1);
             pageBtn2 && pageBoxMobile.appendChild(pageBtn2);
             pageBoxMobile.style.paddingBottom = "15px";
         }
     } else {
-        childDiv.style.width = "400px";
         if (pageBox) {
             pageBtn1 && pageBox.insertBefore(pageBtn1, pageBox.firstChild);
             pageBtn2 && pageBox.appendChild(pageBtn2);
-            pageBoxMobile.style.paddingBottom = "0px";
+            if (pageBoxMobile) {
+                pageBoxMobile.style.paddingBottom = "0px";
+            }
         }
     }
 }
@@ -263,34 +251,11 @@ function updateSVGIcons() {
         
     }
 
-    const element = document.querySelector("#filterBox, #filterBoxL");
-    const childDiv = element?.querySelector("div:nth-child(3)");
-
-    if (childDiv) {
-        childDiv.style.cssText = `box-shadow: ${isDark ? '#ffffff' : '#000000'} 0px 0px 2px 0px; display: none;`;
-    }
-
     const style = document.createElement('style');
     style.innerHTML = `
-        #filterBox > div:nth-child(2) > span:nth-child(2)::before,
-        #filterBoxL > div:nth-child(2) > span:nth-child(2)::before {
-            background: url('${filterIconUrl}') no-repeat center center;
-            background-size: contain;
-        }
         #refreshBtn > img,
         #refreshBtnL > img {
             content: url('${searchIconUrl}');
-        }
-            
-        /* Gradio 4 */
-        #filterBox > button:nth-child(2),
-        #filterBoxL > button:nth-child(2) {
-            background: url('${filterIconUrl}') no-repeat center center !important;
-            background-size: 22px !important;
-        }
-        #filterBox > button:nth-child(2) > span,
-        #filterBoxL > button:nth-child(2) > span {
-            visibility: hidden;
         }
     `;
     document.head.appendChild(style);
@@ -312,25 +277,6 @@ function createTooltip(element, hover_element, insertText) {
         });
         element.appendChild(tooltip);
     }
-}
-
-// Function that closes filter dropdown if clicked outside the dropdown
-function setupClickOutsideListener() {
-    var filterBox = document.getElementById("filterBoxL") || document.getElementById("filterBox");
-    var filterButton = filterBox.children[1];
-    var dropDown = filterBox.getElementsByTagName("div")[2];
-
-    function clickOutsideHandler(event) {
-        var target = event.target;
-        if (!filterBox.contains(target)) {
-            if (!dropDown.contains(target)) {
-                if (filterButton.className.endsWith("open")) {
-                    filterButton.click();
-                }
-            }
-        }
-    }
-    document.addEventListener("click", clickOutsideHandler);
 }
 
 // Create hyperlink in settings to CivitAI account settings
@@ -626,7 +572,7 @@ function inputHTMLPreviewContent(html_input) {
             extractedText = extractedText.replace(/\\n\s*</g, '<');
             extractedText = extractedText.replace(/\\n/g, ' ');
             extractedText = extractedText.replace(/\\t/g, '');
-            extractedText = extractedText.replace(/\\'/g, "'");
+            extractedText = extractedText.replace(/\'/g, "'");
             
             var overlayText = document.querySelector('.civitai-overlay-text');
             var modelInfo = document.createElement('div');
@@ -1202,7 +1148,6 @@ function onPageLoad() {
     addOnClickToButtons();
     createCivitAICardButtons();
     adjustFilterBoxAndButtons();
-    setupClickOutsideListener();
     updateBackToTopVisibility([{isIntersecting: false}]);
 }
 

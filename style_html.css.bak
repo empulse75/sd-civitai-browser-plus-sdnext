@@ -1,0 +1,463 @@
+:root {
+    --mantine-font-size-sm: 14px;
+    --mantine-radius-xl: 9999px; /* Pill shape */
+    --mantine-color-blue-filled: #228be6;
+    --mantine-color-blue-filled-hover: #1c7ed6;
+    --mantine-color-white: #fff;
+    --mantine-scale: 1; /* Default scale for calculations */
+    --mantine-chip-size-sm: 24px;
+    --mantine-chip-checked-padding-sm: 8px;
+    --mantine-chip-padding-sm: 8px;
+    --mantine-chip-icon-size-sm: 16px;
+    --mantine-chip-spacing-sm: 8px;
+    --chip-bd-color: #373a40;
+    --chip-hover-bd-color: #4c6ef5;
+}
+
+
+body {
+    background-color: #0b0f19;
+}
+
+.model-block {
+	box-shadow: 0px 0px 1px 3px #3339ff30;
+    border-radius: 10px;
+    padding: 1px 20px 10px;
+    margin-bottom: 20px;
+}
+
+.model-block code {
+    white-space: pre-wrap;
+}
+
+.model-block dl {
+    overflow-wrap: anywhere;
+}
+
+.civnsfw img {
+    filter: unset;
+}
+
+.sampleimgs .model-block img,
+.sampleimgs .model-block video {
+	padding-top: 1em;
+	max-width: 20em;
+	cursor: zoom-in;
+	transition: max-width 0.1s;
+}
+
+/* Text adjustments */
+h1, h2, h3, h4, h5, dd, dt, p, a, label {
+    font-family: 'Source Sans Pro', 'ui-sans-serif', 'system-ui', sans-serif;
+}
+
+h3 {
+    font-size: 16px;
+}
+
+h2 {
+    margin: 16px 0px 8px;
+    font-size: 22px;
+}
+
+ul {
+    padding-left: 18px;
+}
+
+p {
+    color: #F3F4F6;
+    margin: 0px 0px 6px;
+    font-size: 14px;
+}
+
+dt {
+	font-size: medium;
+    color: #80a6c8 !important;
+    font-size: 16px;
+}
+
+dd {
+	padding: 0px 0px 5px 10px;
+    margin-inline-start: 0px;
+    font-size: 14px;
+    color: #F3F4F6;
+}
+
+a {
+    color: #F3F4F6;
+    font-weight: bold;
+    text-decoration: unset;
+}
+
+a:hover {
+    color: #60A5FA;
+}
+
+.civitai_txt2img {
+    display: none;
+}
+
+/* Preview Image zoom */
+.zoom-radio {
+    display: none !important;
+}
+
+/* Style for when the image is clicked (radio button checked) */
+.zoom-radio:checked + label > img,
+.zoom-radio:checked + label > video {
+    max-width: 95vw;
+    max-height: 95vh;
+    padding-top: 0px;
+    cursor: zoom-out;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1000; /* Higher than the overlay */
+    pointer-events: none; /* Allow clicks to penetrate through to the overlay for resetting */
+}
+
+/* Overlay for resetting zoomed state */
+.zoom-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, .5); 
+    z-index: 999; /* Below the zoomed image */
+    cursor: zoom-out;
+}
+
+.zoom-radio:checked + label + .zoom-overlay {
+    display: block;
+    pointer-events: all; /* Capture click events when displayed */
+}
+
+.zoom-img-container {
+    min-width: 20em;
+}
+
+.model-uploader {
+ 	border-bottom: 1px solid;
+    padding-bottom: 10px;
+    color: white;
+ }
+
+.model-description {
+ 	border-top: 1px solid;
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+    color: white;
+ }
+
+/*Avatar CSS mostly copied from CivitAI, but 48px instead of 32px*/
+.avatar {
+	user-select: none;
+    overflow: hidden;
+    width: 48px;
+    height: 48px;
+    min-width: 48px;
+    border-radius: 48px;
+    text-decoration: none;
+    border: 0;
+    padding: 0;
+    background-color: rgba(0,0,0,0.31);
+    display: inline-block!important;
+    margin-left: 5px!important;
+    vertical-align: middle;
+}
+
+.avatar img {
+	object-fit: cover;
+    width: 100%;
+    height: 100%;
+    display: block;
+    overflow-clip-margin: content-box;
+    overflow: clip;
+    border-style: none;
+}
+
+.model-description {
+    border-top: 1px solid;
+    overflow-wrap: break-word;
+    overflow: hidden;
+    position: relative;
+    max-height: 400px;
+}
+
+.model-description::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 75px;
+    background: linear-gradient(to bottom, rgb(255 255 255 / 0%), #0b0f19);
+    z-index: 1;
+}
+
+.description-toggle-label {
+    display: flex;
+    padding: 10px 0px 0px 0px;
+    font-weight: bold;
+    cursor: pointer;
+    font-size: large;
+    color: white;
+}
+
+.description-toggle-checkbox {
+    position: absolute;
+    opacity: 0;
+    z-index: -1;
+}
+
+.description-toggle-checkbox:checked + .model-description {
+    max-height: none !important;
+    position: unset !important;
+}
+
+.model-description + .description-toggle-label::before {
+    content: "❯";
+    width: 1em;
+    height: 1em;
+    text-align: center;
+    transition: all 0.3s;
+}
+
+.description-toggle-checkbox:checked + .model-description + .description-toggle-label::before {
+    transform: rotate(-90deg);
+    margin-right: 10px;
+}
+
+.description-toggle-checkbox:checked + .model-description + .description-toggle-label::after {
+    content: "Show Less...";
+}
+
+.description-toggle-checkbox:not(:checked) + .model-description + .description-toggle-label::after {
+    content: "Show All...";
+}
+
+/*CSS accordion for toggling extra metadata*/
+/*-----------------------------------------*/
+.accordionCheckbox {
+    position: absolute;
+    opacity: 0;
+    z-index: -1;
+}
+
+.tabs {
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.tab {
+    width: 100%;
+    color: white;
+    overflow: hidden;
+    margin-left: -15px;
+}
+
+.tab-label {
+    display: flex;
+    padding: 1em;
+    font-weight: bold;
+    cursor: pointer;
+    font-size: large;
+}
+
+.civitai-tags-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+}
+
+.civitai-tag,
+.civitai-meta-btn {
+    background-color: #111827;
+    border-radius: 8px;
+    padding: 4px 6px;
+    border: 1px solid #374151;
+}
+
+.civitai-meta-btn:hover {
+    cursor: pointer;
+    background-color: #1F2937;
+}
+
+/* Icon */
+.tab-label::before {
+    content: "❯";
+    width: 1em;
+    height: 1em;
+    text-align: center;
+    transition: all 0.3s;
+}
+
+.accordionCheckbox:checked + .tab-label::before {
+    transform: rotate(90deg);
+}
+
+.tab-content {
+    max-height: 0;
+    padding: 0 1em;
+    transition: all 0.3s;
+}
+
+.tab-close {
+    display: flex;
+    justify-content: flex-end;
+    padding: 1em;
+    font-size: 0.75em;
+    cursor: pointer;
+}
+
+.accordionCheckbox:checked ~ .tab-content {
+    max-height: 100vh;
+    padding: 1em;
+}
+/*-----------------------------------------*/
+/*End CSS accordion for toggling extra metadata*/
+
+    --chip-fz: var(--mantine-font-size-sm, 14px); 
+    --chip-size: var(--mantine-chip-size-sm, 24px);
+    --chip-radius: var(--mantine-radius-xl, 9999px); 
+    --chip-checked-padding: var(--mantine-chip-checked-padding-sm, 8px);
+    --chip-padding: var(--mantine-chip-padding-sm, 8px);
+    --chip-icon-size: var(--mantine-chip-icon-size-sm, 16px);
+    --chip-bg: var(--mantine-color-blue-filled, #228be6); 
+    --chip-hover: var(--mantine-color-blue-filled-hover, #1c7ed6);
+    --chip-color: var(--mantine-color-white, #fff);
+    --chip-bd: calc(0.0625rem * var(--mantine-scale, 1)) solid transparent;
+    --chip-spacing: var(--mantine-chip-spacing-sm, 8px);
+    font-size: var(--chip-fz);
+    min-height: var(--chip-size);
+    border-radius: var(--chip-radius);
+    padding: var(--chip-padding);
+    background-color: var(--chip-bg);
+    color: var(--chip-color);
+    border: var(--chip-bd);
+    display: inline-flex; 
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background-color 150ms ease;
+}
+
+.mantine-Chip-root:hover {
+    background-color: var(--chip-hover);
+}
+
+.mantine-Group-root {
+    --group-gap: calc(0.5rem * var(--mantine-scale, 1));
+    --group-align: center;
+    --group-justify: flex-start;
+    --group-wrap: wrap;
+    margin-bottom: calc(0.25rem * var(--mantine-scale, 1));
+    display: flex; 
+    flex-wrap: var(--group-wrap);
+    gap: var(--group-gap);
+    align-items: var(--group-align);
+    justify-content: var(--group-justify);
+}
+
+.mantine-Chip-input {
+    position: absolute;
+    height: 1px;
+    width: 1px;
+    overflow: hidden;
+    clip: rect(1px, 1px, 1px, 1px);
+    white-space: nowrap;
+}
+
+.mantine-Chip-input:checked + .mantine-Chip-label {
+    background-color: var(--chip-bg); 
+    color: var(--chip-color);
+    border-color: var(--chip-bg); 
+}
+
+.FilterChip_label__83yY2 {
+    padding: 0 var(--chip-padding); 
+    line-height: var(--chip-size); 
+    white-space: nowrap;
+    display: inline-block;
+}
+/* Civitai Filter Button Styles - Added by Gemini */
+input[type="checkbox"].mantine-Chip-input,
+input[type="radio"].mantine-Chip-input {
+    display: none !important;
+}
+
+.FilterChip_label__83yY2 {
+    border-radius: 9999px; /* Pill shape */
+    background-color: #22262b; /* Dark background for inactive chips */
+    color: #fff; /* White text */
+    padding: 8px; /* Padding for chip */
+    border: 1px solid #373a40; /* Inactive border color */
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    font-size: 14px; /* Hardcoded font size */
+    min-height: 24px; /* Hardcoded min-height */
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1; /* Adjust line height for vertical alignment */
+    height: unset !important; /* Override mantine specific height if any */
+}
+
+.FilterChip_label__83yY2:hover {
+    border-color: #4c6ef5; /* Hover border color */
+}
+
+/* Checked state for checkbox and radio */
+input[type="checkbox"].mantine-Chip-input:checked + .FilterChip_label__83yY2,
+input[type="radio"].mantine-Chip-input:checked + .FilterChip_label__83yY2 {
+    background-color: #346fef; /* Blue background for active chips */
+    border-color: #346fef; /* Active border color */
+}
+
+/* Styling for Civitai filter chips to match civitai.com/models */
+
+/* Hide the actual checkbox/radio input */
+.mantine-Chip-input {
+    display: none !important;
+}
+
+/* Base style for the chip label (inactive state) */
+.FilterChip_label__83yY2.mantine-Chip-label {
+    /* Hardcoded values from Mantine defaults/Civitai example */
+    font-size: 14px; /* var(--mantine-font-size-sm) */
+    min-height: 24px; /* var(--chip-size) */
+    border-radius: 9999px; /* var(--mantine-radius-xl) - pill shape */
+    padding: 6px 14px; /* Adjusted from --chip-padding-sm and --chip-checked-padding-sm for aesthetic */
+    background-color: #22262b; /* Inactive background from style.css, matches Civitai */
+    color: #c1c2c5; /* Inactive text color from style.css, matches Civitai */
+    border: 1px solid #373a40; /* Inactive border from style.css, matches Civitai */
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    user-select: none;
+    line-height: 1; /* Prevent extra spacing */
+}
+
+/* Hover state for the chip label */
+.FilterChip_label__83yY2.mantine-Chip-label:hover {
+    background-color: #2c2f33; /* Slightly lighter grey on hover from style.css */
+    border-color: #4c6ef5; /* Blue on hover from style.css */
+}
+
+/* Checked state for the chip label */
+.mantine-Chip-input:checked + .FilterChip_label__83yY2.mantine-Chip-label {
+    background: #346fef; /* Civitai Blue from style.css */
+    border-color: #346fef; /* Civitai Blue from style.css */
+    color: white; /* White text on active from style.css */
+    font-weight: 600;
+    box-shadow: 0 0 0 1px #346fef; /* Subtle glow from style.css */
+}
+
+/* Ensure the span inside the label is also styled correctly if present */
+.FilterChip_label__83yY2.mantine-Chip-label > span {
+    display: contents; /* Allow content to flow without extra box */
+}

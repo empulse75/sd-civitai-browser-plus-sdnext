@@ -1,3 +1,4 @@
+/* Card list HTML */
 .civmodellist {
 	display: flex;
 	flex-wrap: wrap;
@@ -51,6 +52,8 @@
 	background-color: rgba(32, 32, 32, 0.5);
 	color: white !important;
 }
+
+/* End of Card list HTML */
 
 #quicksettings0 > div{
 	max-width: None !important;
@@ -231,6 +234,9 @@
     align-items: end;
 }
 
+    margin: unset;
+}
+
 #searchRow {
     max-width: 800px;
     align-self: center;
@@ -375,6 +381,9 @@
     color: var(--link-text-color-hover);
     cursor: pointer;
 }
+/* Customized Accordion Filter */
+
+}
 
 #filterBox:hover,
 #filterBoxL:hover {
@@ -387,6 +396,16 @@
     background: var(--button-secondary-background-fill-hover);
     border-radius: 7px !important;
     height: 40px;
+}
+
+#filterBox > div:nth-child(3),
+#filterBoxL > div:nth-child(3) {
+    padding: 20px;
+    position: absolute;
+    border-radius: 10px;
+    width: 300px;
+    z-index: 100 !important;
+    margin-top: 55px;
 }
 
 .browser_tooltip {
@@ -404,9 +423,54 @@
     color: var(--neutral-400);
 }
 
+#filterBox > div:nth-child(3), #toggle4 > div:nth-child(3) {
+    background: var(--background-fill-primary);
+}
+
+#filterBoxL > div:nth-child(3), #toggle4L > div:nth-child(3) {
+    background: var(--neutral-950);
+}
+
+#filterBox > div:nth-child(2),
+#filterBoxL > div:nth-child(2) {
+    padding: 10px !important;
+}
+
+#filterBox .gradio-slider input[type="number"],
+#filterBoxL .gradio-slider input[type="number"] {
+    width: 70px !important;
+}
+
 #pageBox .gradio-slider input[type="number"] {
     width: 5em !important;
 }
+
+#filterBox > div:nth-child(2) > span:nth-child(1),
+#filterBoxL > div:nth-child(2) > span:nth-child(1) {
+    display: none;
+}
+
+#filterBox > div:nth-child(2) > span:nth-child(2),
+#filterBoxL > div:nth-child(2) > span:nth-child(2) {
+    transform: rotate(0deg) !important;
+    transition: 0s !important;
+    display: inline-block;
+    width: 24px;
+    height: 24px;
+    font-size: 0;
+    color: transparent;
+    overflow: hidden;
+}
+
+#filterBox > div:nth-child(2) > span:nth-child(2)::before,
+#filterBoxL > div:nth-child(2) > span:nth-child(2)::before {
+    content: "";
+    display: block;
+    width: 100%; 
+    height: 100%;
+}
+
+/* End of Custom Accordion */
 
 .card-button {
     width: 42px !important;
@@ -435,6 +499,7 @@
     fill: red !important;
 }
 
+/* Custom settings Accordion */
 .settings-accordion {
     border: 1px solid var(--block-border-color);
     border-radius: 8px !important;
@@ -501,10 +566,12 @@
 	transition: max-width 0.1s;
 }
 
+/* Preview Image zoom */
 #civitai_preview_html .zoom-radio {
     display: none!important;
 }
 
+/* Style for when the image is clicked (radio button checked) */
 #civitai_preview_html .zoom-radio:checked + label > img,
 #civitai_preview_html .zoom-radio:checked + label > video {
     max-width: 95vw;
@@ -515,10 +582,11 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    z-index: 1000; 
-    pointer-events: none; 
+    z-index: 1000; /* Higher than the overlay */
+    pointer-events: none; /* Allow clicks to penetrate through to the overlay for resetting */
 }
 
+/* Overlay for resetting zoomed state */
 #civitai_preview_html .zoom-overlay {
     display: none;
     position: fixed;
@@ -527,13 +595,13 @@
     right: 0;
     bottom: 0;
     background: rgba(0, 0, 0, .5); 
-    z-index: 999; 
+    z-index: 999; /* Below the zoomed image */
     cursor: zoom-out;
 }
 
 #civitai_preview_html .zoom-radio:checked + label + .zoom-overlay {
     display: block;
-    pointer-events: all;
+    pointer-events: all; /* Capture click events when displayed */
 }
 
 #civitai_preview_html .zoom-img-container {
@@ -606,7 +674,10 @@
 .description-toggle-checkbox:not(:checked) + .model-description + .description-toggle-label::after {
     content: "Show All...";
 }
+/*------------------------------------------*/
+/*End CSS accordion for toggling description*/
 
+/*Avatar CSS mostly copied from CivitAI, but 48px instead of 32px*/
 #civitai_preview_html .avatar {
 	user-select: none;
     overflow: hidden;
@@ -638,10 +709,19 @@
     color: #80a6c8!important;
 }
 
+/*
+#civitai_preview_html dt {
+    font-size: medium;
+    color: #3966bb !important;
+}
+*/
+
 #civitai_preview_html dd {
 	padding: 0px 0px 10px 10px;
 }
 
+/*CSS accordion for toggling extra metadata*/
+/*-----------------------------------------*/
 #civitai_preview_html .accordionCheckbox {
     position: absolute;
     opacity: 0;
@@ -668,6 +748,7 @@
     font-size: large;
 }
 
+/* Icon */
 #civitai_preview_html .tab-label::before {
     content: "❯";
     width: 1em;
@@ -698,26 +779,129 @@
     max-height: unset;
     padding: 1em;
 }
+/*-----------------------------------------*/
+/*End CSS accordion for toggling extra metadata*/
 
+/* --- Layout and Filter Chip Styling --- */
+
+/* Main container for filters and search */
+#filterAndSearchArea {
+    gap: 15px; /* Spacing between filter section and search section */
+    padding: 10px;
+}
+
+/* Filter Section Container */
+#filterBox {
+    padding: 10px;
+    border: 1px solid #373a40; /* Civitai inactive chip border */ 
+    border-radius: 20px; /* Pill shape */ 
+    background-color: #22262b; /* Civitai inactive chip background */ 
+    gap: 15px; /* Space between individual filter groups */ 
+    max-width: 800px;
+    align-self: center;
+}
+
+/* Center Labels and add Dividers */
+/* Target the gr.Row that wraps each filter group */
+#filterBox > div[data-testid="block"] {
+    border-bottom: 1px solid var(--block-border-color);
+    padding-bottom: 15px;
+    margin-bottom: 15px;
+}
+
+/* Remove border/margin from the last filter group */
+#filterBox > div[data-testid="block"]:last-of-type {
+    border-bottom: none;
+    padding-bottom: 0;
+    margin-bottom: 0;
+}
+
+
+#filterBox label.gr-block span.text-md { /* Targeting the label text within Gradio's structure */
+    width: 100%;
+    text-align: center;
+    display: block;
+    font-size: 1.1em;
+    font-weight: bold;
+    color: var(--body-text-color);
+    margin-bottom: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Chip Styling (Civitai-like) */
+/* For Radio and CheckboxGroup containers */
+#filterBox .gr-radio-group,
+#filterBox .gr-checkbox-group {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+    padding: 5px; /* Add some padding around chips */
+}
+
+/* Style the individual chip labels */
+#filterBox .gr-radio-group label,
+#filterBox .gr-checkbox-group label {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #22262b !important; /* Dark grey */
+    border: 1px solid #373a40 !important;
+    border-radius: 20px !important; /* Pill shape */
+    padding: 6px 14px !important;
+    cursor: pointer;
+    transition: all 0.2s;
+    color: #c1c2c5 !important; /* Light grey text */
+    min-width: 80px;
+    text-align: center;
+    user-select: none;
+}
+
+#filterBox .gr-radio-group label:hover,
+#filterBox .gr-checkbox-group label:hover {
+    background: #2c2f33 !important; /* Slightly lighter grey on hover */
+    border-color: #4c6ef5 !important; /* Blue on hover */
+}
+
+#filterBox .gr-radio-group input:checked + label,
+#filterBox .gr-checkbox-group input:checked + label {
+    background: #346fef !important; /* Civitai Blue */
+    border-color: #346fef !important;
+    color: white !important;
+    box-shadow: 0 0 0 1px #346fef; /* Subtle glow */
+    font-weight: 600;
+}
+
+/* Hide default radio/checkbox inputs */
+#filterBox .gr-radio-group input,
+#filterBox .gr-checkbox-group input {
+    display: none !important;
+}
+
+/* Search Row Alignment */
 #searchRow {
     display: flex !important;
     flex-direction: row !important;
     align-items: center !important;
     gap: 10px;
     width: 100%;
-    margin-top: 15px;
+    margin-top: 15px; /* Space between filters and search */
 }
 
 #searchBox {
-    flex-grow: 1;
+    flex-grow: 1; /* Allow searchbox to take available space */
 }
 
-#searchBox textarea { 
+#searchBox textarea { /* Target the actual textarea inside the textbox */
     height: 42px !important;
     padding: 10px !important;
     overflow: hidden;
     white-space: nowrap;
 }
+
+/* Search Button */
+/* Search Button */ 
 #refreshBtn, #refreshBtnL {
     width: 50px !important;
     min-width: 50px !important;
@@ -725,75 +909,28 @@
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
-    font-size: 20px !important; 
+    font-size: 20px !important; /* For the emoji */ 
     padding: 0 !important;
     margin: 0 !important;
-    background: #22262b !important;
+    background: #22262b !important; /* Dark grey */ 
     border: 1px solid #373a40 !important;
-    border-radius: 20px !important;
+    border-radius: 20px !important; /* Pill shape */ 
 }
 #refreshBtn:hover, #refreshBtnL:hover {
-    background: #2c2f33 !important;
-    border-color: #4c6ef5 !important;
+    background: #2c2f33 !important; /* Slightly lighter grey on hover */ 
+    border-color: #4c6ef5 !important; /* Blue on hover */ 
+}
+.mantine-Chip-root {
+    --chip-fz: var(--mantine-font-size-sm);
+    --chip-size: var(--chip-size-sm);
+    --chip-radius: var(--mantine-radius-xl);
+    --chip-checked-padding: var(--chip-checked-padding-sm);
+    --chip-padding: var(--chip-padding-sm);
+    --chip-icon-size: var(--chip-icon-size-sm);
+    --chip-bg: var(--mantine-color-blue-filled);
+    --chip-hover: var(--mantine-color-blue-filled-hover);
+    --chip-color: var(--mantine-color-white);
+    --chip-bd: calc(0.0625rem * var(--mantine-scale)) solid transparent;
+    --chip-spacing: var(--chip-spacing-sm);
 }
 
-/* --- Chip/Pill Filter Styling (Civitai Style) --- */
-
-/* Target the containers for Model Types (chipGroup) and Base Model (centerText) and Time/Sort/Search */
-#chipGroup .wrap, #centerText .wrap, #searchType .wrap {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-    justify-content: flex-start !important; /* Force left align for chips */
-    margin-bottom: 10px;
-}
-
-/* Hide the default checkboxes and radios */
-#chipGroup input[type="checkbox"], #chipGroup input[type="radio"],
-#centerText input[type="checkbox"], #centerText input[type="radio"],
-#searchType input[type="radio"] {
-    display: none !important;
-}
-
-/* Style the labels as Pills */
-#chipGroup label, #centerText label, #searchType label {
-    background-color: rgba(130, 130, 130, 0.15); /* Subtle dark background */
-    border: 1px solid rgba(130, 130, 130, 0.2);
-    border-radius: 16px;
-    padding: 4px 12px;
-    margin: 0 !important;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 32px;
-    font-size: 0.9rem;
-    color: var(--body-text-color);
-}
-
-/* Hover effect */
-#chipGroup label:hover, #centerText label:hover, #searchType label:hover {
-    background-color: rgba(130, 130, 130, 0.3);
-    border-color: var(--link-text-color-hover);
-}
-
-/* Selected state (Blue Glow) */
-#chipGroup label.selected, #centerText label.selected, #searchType label.selected {
-    background-color: #228be6 !important; /* Civitai Blue */
-    border-color: #228be6 !important;
-    color: white !important;
-    font-weight: 600;
-    box-shadow: 0 0 8px rgba(34, 139, 230, 0.5); /* Civitai Blue Glow */
-}
-
-/* Remove default span margins inside the label */
-#chipGroup label span, #centerText label span, #searchType label span {
-    margin: 0 !important;
-    padding: 0 !important;
-}
-
-/* Override centerText alignment for the chip container specifically */
-#centerText, #searchType {
-    text-align: left !important;
-}
