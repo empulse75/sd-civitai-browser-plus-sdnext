@@ -81,8 +81,6 @@ function updateCardSize(width, height) {
     addOrUpdateRule(styleSheet, '.civmodelcard figcaption', textKeyframes);
 
     // New logic for scaling checkbox size
-    // Assuming original card width was around 8em (based on the fontSize calculation)
-    // and original checkbox size was 30px.
     const originalCardEm = 8;
     const originalCheckboxPx = 30;
     const originalCheckboxOffsetPx = 8; // top/right offset from style.css
@@ -104,6 +102,22 @@ function updateCardSize(width, height) {
     // The 70% factor comes from the existing style.css rule for background-size
     var checkmarkKeyframes = `background-size: ${newCheckboxPx * 0.7}px !important;`;
     addOrUpdateRule(styleSheet, '.model-checkbox:checked + .custom-checkbox', checkmarkKeyframes);
+
+    // New logic for scaling lighted borders
+    // originalCardEm is already defined above
+    // scaleFactor is already defined above
+
+    const newSolidSpread = 4 * scaleFactor; // Scale the 4px solid border spread
+    const newGlowBlur = 15 * scaleFactor;   // Scale the 15px glow blur
+    const newGlowSpread = 7 * scaleFactor;   // Scale the 7px glow spread
+
+    // Update for checked state
+    const checkedBoxShadow = `0px 0px 0px ${newSolidSpread}px var(--civitai-blue), 0 0 ${newGlowBlur}px ${newGlowSpread}px rgba(34, 139, 230, 0.7) !important`;
+    addOrUpdateRule(styleSheet, '.civmodelcard.checked', `box-shadow: ${checkedBoxShadow};`);
+
+    // Update for selected state
+    const selectedBoxShadow = `0px 0px 0px ${newSolidSpread}px var(--civitai-green), 0 0 ${newGlowBlur}px ${newGlowSpread}px rgba(76, 175, 80, 0.7) !important`;
+    addOrUpdateRule(styleSheet, '.civmodelcard.selected', `box-shadow: ${selectedBoxShadow};`);
 }
 
 // Toggles NSFW display
@@ -620,7 +634,7 @@ function inputHTMLPreviewContent(html_input) {
             extractedText = extractedText.replace(/\\n\s*</g, '<');
             extractedText = extractedText.replace(/\\n/g, ' ');
             extractedText = extractedText.replace(/\\t/g, '');
-            extractedText = extractedText.replace(/\'/g, "'");
+            extractedText = extractedText.replace(/'/g, "'");
             
             var overlayText = document.querySelector('.civitai-overlay-text');
             var modelInfo = document.createElement('div');
