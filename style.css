@@ -22,6 +22,46 @@
 	box-shadow: 0px 0px 1px 3px whitesmoke;
 }
 
+/* Custom properties for colors */
+:root {
+    --civitai-blue: #228be6;
+    --civitai-green: #4CAF50; /* A suitable green */
+    --civitai-blue-darker: #1a6bbd; /* A darker shade of Civitai blue */
+    --civitai-green-darker: #388E3C; /* A darker shade of green */
+}
+
+/* Styles for checked .civmodelcard */
+.civmodelcard.checked {
+    box-shadow: 0px 0px 0px 4px var(--civitai-blue), 0 0 15px 7px rgba(34, 139, 230, 0.7) !important; /* Thick blue lighting border */
+    background: linear-gradient(to bottom, rgba(34, 139, 230, 0.2) 0%, rgba(34, 139, 230, 0) 50%, rgba(34, 139, 230, 0.2) 100%) !important; /* Dual-color background */
+    z-index: var(--layer-5); /* Keep it on top */
+}
+
+/* Styles for selected .civmodelcard (checked + additionally selected) */
+.civmodelcard.selected {
+    box-shadow: 0px 0px 0px 4px var(--civitai-green), 0 0 15px 7px rgba(76, 175, 80, 0.7) !important; /* Thick green lighting border */
+    background: linear-gradient(to bottom, rgba(76, 175, 80, 0.2) 0%, rgba(76, 175, 80, 0) 50%, rgba(76, 175, 80, 0.2) 100%) !important; /* Dual-color background */
+    z-index: var(--layer-6); /* Even higher z-index for selection */
+}
+
+/* Fix checkbox display */
+.model-checkbox:checked + .custom-checkbox {
+    background-color: var(--checkbox-background-color-selected, var(--civitai-blue-darker)) !important; /* Ensure a solid background */
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23ffffff' d='M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z'/%3E%3C/svg%3E") !important; /* White checkmark SVG */
+    border-color: var(--checkbox-border-color-selected, var(--civitai-blue)) !important;
+}
+
+/* Image sharpness improvement */
+.civmodelcard img, .civmodelcard .video-bg,
+#civitai_preview_html .sampleimgs .model-block img {
+    image-rendering: -webkit-optimize-contrast; /* Webkit browsers */
+    image-rendering: crisp-edges; /* Modern browsers */
+    /* Add max-width and max-height to ensure images don't get blurry when scaled up */
+    max-width: 100%;
+    max-height: 100%;
+    display: block; /* Remove extra space below images */
+}
+
 .civmodelcardinstalled {
 	box-shadow: 0px 0px 1px 3px aquamarine;
 }

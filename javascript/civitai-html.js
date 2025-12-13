@@ -5,8 +5,31 @@ function select_model(model_name, event, bool = false, content_type = null, send
     if (event) {
         var className = event.target.className;
         if (className.includes('custom-checkbox') || className.includes('model-checkbox')) {
-            return;
+            // If the checkbox itself was clicked, let multi_model_select handle the 'checked' class
+            // This function (select_model) should only manage the 'selected' class for card clicks.
+            // We can still proceed to set the 'selected' class on the card, but first, remove all existing 'selected' states.
         }
+    }
+
+    // Remove 'selected' class from all cards
+    const allCards = document.querySelectorAll('.civmodellist .civmodelcard');
+    allCards.forEach(card => card.classList.remove('selected'));
+
+    // Find the clicked card and add 'selected' class
+    let targetCard = null;
+    const parentDiv = document.querySelector('.civmodellist');
+    if (parentDiv) {
+        const cards = parentDiv.querySelectorAll('.civmodelcard');
+        cards.forEach((card) => {
+            const onclickAttr = card.getAttribute('onclick');
+            if (onclickAttr && onclickAttr.includes(`select_model('${model_name}', event)`)) {
+                targetCard = card;
+            }
+        });
+    }
+
+    if (targetCard) {
+        targetCard.classList.add('selected');
     }
 
     let output;
@@ -672,6 +695,27 @@ function multi_model_select(modelName, modelType, isChecked) {
         selectedTypes = [];
         return;
     }
+
+    const parentDiv = document.querySelector('.civmodellist');
+    let targetCard = null;
+    if (parentDiv) {
+        const cards = parentDiv.querySelectorAll('.civmodelcard');
+        cards.forEach((card) => {
+            const onclickAttr = card.getAttribute('onclick');
+            if (onclickAttr && onclickAttr.includes(`select_model('${modelName}', event)`)) {
+                targetCard = card;
+            }
+        });
+    }
+
+    if (targetCard) {
+        if (isChecked) {
+            targetCard.classList.add('checked');
+        } else {
+            targetCard.classList.remove('checked');
+        }
+    }
+
     if (isChecked) {
         if (!selectedModels.includes(modelName)) {
             selectedModels.push(modelName);
