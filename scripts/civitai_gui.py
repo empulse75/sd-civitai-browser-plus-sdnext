@@ -150,14 +150,14 @@ def get_base_models():
     api_url = 'https://civitai.com/api/v1/models?baseModels=GetModels'
     json_return = _api.request_civit_api(api_url, True)
     default_options = [
-        "SD 1.4", "SD 1.5", "SD 1.5 LCM", "SD 1.5 Hyper", "SD 2.0", "SD 2.0 768", "SD 2.1", "SD 2.1 768", "SD 2.1 Unclip",
-        "SDXL 0.9", "SDXL 1.0", "SDXL 1.0 LCM", "SDXL Distilled", "SDXL Turbo", "SDXL Lightning", "SDXL Hyper",
-        "SD 3", "SD 3.5", "SD 3.5 Medium", "SD 3.5 Large",
-        "Pony", "Illustrious",
-        "Stable Cascade", "Playground v2", "PixArt a", "PixArt Σ",
-        "Flux.1 S", "Flux.1 D", "Flux.1 Dev", "Flux.1 Schnell",
-        "AuraFlow", "Hunyuan 1", "Kolors", "Lumina", "Mochi 1",
-        "SVD", "SVD XT", "CogVideoX",
+        "AuraFlow", "Chroma", "CogVideoX", "Flux.1 D", "Flux.1 Krea", "Flux.1 Kontext", "Flux.1 S", "Flux.2 D", 
+        "HiDream", "Hunyuan 1", "Hunyuan Video", "Illustrious", "Imagen4", "Kolors", "LTXV", "Lumina", 
+        "Mochi", "Nano Banana", "NoobAI", "ODOR", "OpenAI", 
+        "PixArt E", "PixArt a", "Playground v2", "Pony", "Pony V7", "Qwen", 
+        "SD 1.4", "SD 1.5", "SD 1.5 Hyper", "SD 1.5 LCM", "SD 2.0", "SD 2.0 768", "SD 2.1", "SD 2.1 768", "SD 2.1 Unclip", 
+        "SD 3", "SD 3.5", "SD 3.5 Large", "SD 3.5 Large Turbo", "SD 3.5 Medium", 
+        "SDXL 0.9", "SDXL 1.0", "SDXL 1.0 LCM", "SDXL Distilled", "SDXL Hyper", "SDXL Lightning", "SDXL Turbo", 
+        "SVD", "SVD XT", "Seedream", "Sora 2", "Stable Cascade", "Veo 3", "Wan Video", 
         "Other"
     ]
     
@@ -210,16 +210,22 @@ def on_ui_tabs():
             with gr.Column(elem_id="filterAndSearchArea"):
                 with gr.Column(elem_id=filterBox): # Filter section
                     with gr.Row():
-                        use_search_term = gr.Radio(label="Search type:", choices=["Model name", "User name", "Tag"], value="Model name", elem_id="searchType")
-                    with gr.Row():
-                        period_type = gr.Radio(label='Time period:', choices=["All Time", "Year", "Month", "Week", "Day"], value="All Time", elem_id="chipGroup")
                         with gr.Column():
-                            gr.Markdown("##### Model Types")
+                            gr.HTML("<div class='filter-header'>Search Type</div>")
+                            use_search_term = gr.Radio(label="Search type:", choices=["Model name", "User name", "Tag"], value="Model name", elem_id="searchType", show_label=False)
+                    with gr.Row():
+                        with gr.Column(scale=1, min_width=200):
+                             gr.HTML("<div class='filter-header'>Time Period</div>")
+                             period_type = gr.Radio(label='Time period:', choices=["All Time", "Year", "Month", "Week", "Day"], value="All Time", elem_id="chipGroup", show_label=False)
+                        with gr.Column(scale=3):
+                            gr.HTML("<div class='filter-header'>Model Types</div>")
                             content_type = gr.CheckboxGroup(label='Content type:', choices=content_choices, value=None, type="value", elem_id="chipGroup", show_label=False)
-                            gr.Markdown("##### Base Model Categories")
+                            gr.HTML("<div class='filter-header'>Base Model Categories</div>")
                             base_filter = gr.CheckboxGroup(label='Base model:', choices=get_base_models(), value=None, type="value", elem_id="centerText", show_label=False)
                     with gr.Row():
-                        sort_type = gr.Radio(label='Sort by:', choices=["Newest","Oldest","Most Downloaded","Highest Rated","Most Liked","Most Buzz","Most Discussed","Most Collected","Most Images"], value="Most Downloaded", elem_id="chipGroup")
+                        with gr.Column():
+                            gr.HTML("<div class='filter-header'>Sort By</div>")
+                            sort_type = gr.Radio(label='Sort by:', choices=["Newest","Oldest","Most Downloaded","Highest Rated","Most Liked","Most Buzz","Most Discussed","Most Collected","Most Images"], value="Most Downloaded", elem_id="chipGroup", show_label=False)
                     with gr.Row(elem_id=component_id):
                         create_json = gr.Checkbox(label=f"Save info after download", value=True, elem_id=toggle1, min_width=171)
                         show_nsfw = gr.Checkbox(label="NSFW content", value=False, elem_id=toggle2, min_width=107)

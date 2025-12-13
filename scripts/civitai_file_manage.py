@@ -891,9 +891,9 @@ def version_match(file_paths, api_response):
 def get_content_choices(scan_choices=False):
     use_LORA = getattr(opts, "use_LORA", False)
     if use_LORA:
-        content_list = ["Checkpoint", "TextualInversion", "LORA, LoCon, DoRA", "Poses", "Controlnet", "Hypernetwork", "AestheticGradient", "VAE", "Upscaler", "MotionModule", "Wildcards", "Workflows", "Detection", "Other"]
+        content_list = ["AestheticGradient", "Checkpoint", "Controlnet", "Detection", "Hypernetwork", "LORA, LoCon, DoRA", "MotionModule", "Poses", "TextualInversion", "Upscaler", "VAE", "Wildcards", "Workflows", "Other"]
     else:
-        content_list = ["Checkpoint", "TextualInversion", "LORA", "LoCon", "DoRA", "Poses", "Controlnet", "Hypernetwork", "AestheticGradient", "VAE", "Upscaler", "MotionModule", "Wildcards", "Workflows", "Detection", "Other"]
+        content_list = ["AestheticGradient", "Checkpoint", "Controlnet", "Detection", "DoRA", "Hypernetwork", "LORA", "LoCon", "MotionModule", "Poses", "TextualInversion", "Upscaler", "VAE", "Wildcards", "Workflows", "Other"]
     if scan_choices:
         content_list.insert(0, 'All')
         return content_list

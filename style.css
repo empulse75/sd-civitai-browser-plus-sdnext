@@ -797,3 +797,17 @@
 #centerText, #searchType {
     text-align: left !important;
 }
+
+/* Header styling */
+.filter-header {
+    font-size: 1rem;
+    font-weight: 700;
+    margin-bottom: 4px;
+    margin-top: 8px;
+    color: var(--body-text-color);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border-left: 4px solid #228be6;
+    padding-left: 8px;
+    line-height: 1.2;
+}
