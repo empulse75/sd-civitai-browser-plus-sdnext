@@ -237,7 +237,7 @@ def model_list_html(json_data):
                     image = image.replace("width=", "transcode=true,width=")
                     imgtag = f'<video class="video-bg" {playback} muted playsinline><source src="{image}" type="video/mp4"></video>'
                 else:
-                    imgtag = f'<img src="{image}"></img>'
+                    imgtag = f'<img src="{image}" onerror="this.onerror=null;this.src=\'./file=html/card-no-preview.png\';"></img>'
             else:
                 imgtag = f'<img src="./file=html/card-no-preview.png"></img>'
             
@@ -260,7 +260,13 @@ def model_list_html(json_data):
                             installstatus = "civmodelcardoutdated"
             model_name_js = model_name.replace("'", "\\'")
             model_string = escape(f"{model_name_js} ({model_id})")
-            model_card = f'<figure class="civmodelcard {nsfw} {installstatus}" base-model="{baseModel}" date="{date}" onclick="select_model(\'{model_string}\', event)">'
+            model_card = f'<figure class="civmodelcard {nsfw} {installstatus}" base-model="{baseModel}" data-model-type="{item["type"]}" date="{date}" onclick="select_model(\'{model_string}\', event)">'
+            model_card += f'''
+                <div class="model-info-pill">
+                    <span class="model-type">{item['type']}</span>
+                    <span class="base-model">{baseModel}</span>
+                </div>
+            '''
             if installstatus != "civmodelcardinstalled":
                 model_card += f'<input type="checkbox" class="model-checkbox" id="checkbox-{model_string}" onchange="multi_model_select(\'{model_string}\', \'{item["type"]}\', this.checked)" style="opacity: 0; position: absolute; top: 10px; right: 10px;">' \
                             + f'<label for="checkbox-{model_string}" class="custom-checkbox"></label>'
@@ -743,7 +749,7 @@ def update_model_info(model_string=None, model_version=None, only_html=False, in
                         meta_button = False
                         prompt_dict = {}
                     else:
-                        img_html += f'<img data-sampleimg="true" src="{image_url}">'
+                        img_html += f'<img data-sampleimg="true" src="{image_url}" onerror="this.onerror=null;this.src=\'./file=html/card-no-preview.png\';">'
 
                     img_html += '''
                         </label>

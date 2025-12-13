@@ -1193,9 +1193,81 @@ function onPageLoad() {
     createCivitAICardButtons();
     adjustFilterBoxAndButtons();
     updateBackToTopVisibility([{isIntersecting: false}]);
+
+    // *** New code for dropdown scroll fix ***
+    const versionDropdown = gradioApp().querySelector('#quicksettings0');
+    if (versionDropdown) {
+        let savedScrollY = 0;
+
+        versionDropdown.addEventListener('mousedown', () => {
+            savedScrollY = window.scrollY;
+        });
+
+        // Gradio often uses an internal input field for dropdowns
+        const internalInput = versionDropdown.querySelector('input[type="text"]');
+        if (internalInput) {
+            internalInput.addEventListener('focus', () => {
+                savedScrollY = window.scrollY;
+            });
+        }
+
+        // Use a mutation observer to detect when the dropdown options become visible
+        // This is a more robust way to detect when Gradio has finished its DOM manipulations
+        const observer = new MutationObserver((mutationsList, observer) => {
+            for (const mutation of mutationsList) {
+                if (mutation.type === 'attributes' && mutation.attributeName === 'style') {
+                    // Check if the dropdown options are now visible
+                    // Gradio often makes the dropdown options visible by changing style properties
+                    const dropdownOptions = versionDropdown.querySelector('.options'); // Assuming a class 'options' for the dropdown list
+                    if (dropdownOptions && dropdownOptions.style.display !== 'none' && savedScrollY !== 0) {
+                        // Restore scroll position after a short delay
+                        setTimeout(() => {
+                            window.scrollTo(0, savedScrollY);
+                            savedScrollY = 0; // Reset after restoring
+                        }, 50); // Small delay to allow Gradio to finish its rendering
+                    }
+                }
+            }
+        });
+
+        // Start observing the dropdown element for attribute changes (style changes indicate visibility change)
+        observer.observe(versionDropdown, { attributes: true, subtree: true });
+
+        // Fallback for simple click events
+        versionDropdown.addEventListener('click', () => {
+            // Restore scroll position after a short delay
+            setTimeout(() => {
+                window.scrollTo(0, savedScrollY);
+                savedScrollY = 0; // Reset after restoring
+            }, 50);
+        });
+    }
+    // *** End new code ***
+
+    // Attempt to prevent scrolling on dropdown focus (previous attempt, keeping it for now)
+    preventScrollOnFocus('#quicksettings0');
 }
 
-onUiLoaded(onPageLoad);
+// Function to prevent unwanted scrolling for specific elements (keeping the previous helper function)
+function preventScrollOnFocus(selector) {
+    const element = document.querySelector(selector);
+    if (element) {
+        element.addEventListener('mousedown', (event) => {
+            event.stopPropagation();
+        });
+        element.addEventListener('focus', (event) => {
+            event.preventDefault();
+            event.stopPropagation();
+        });
+        const internalInput = element.querySelector('input, textarea');
+        if (internalInput) {
+            internalInput.addEventListener('focus', (event) => {
+                event.preventDefault();
+                event.stopPropagation();
+            });
+        }
+    }
+}
 
 function checkSettingsLoad() {
     const divElement = gradioApp().querySelector('#setting_custom_api_key');
