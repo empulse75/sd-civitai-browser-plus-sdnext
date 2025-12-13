@@ -1,3 +1,14 @@
+# Compatibility Update (SDNext)
+
+This fork includes layout and compatibility fixes for SDNext (Stable Diffusion WebUI):
+
+*   **Layout Redesign:** Improved filter section layout with "Model Types" and "Base Model Categories" clearly grouped.
+*   **UI Modernization:** Applied Civitai-style pill/chip styling to filters for a cleaner look.
+*   **Fixes:** Resolved issues with filter buttons not lighting up and layout glitches in recent SDNext versions.
+*   **Missing Filters:** Added missing model types (e.g., "Detection") to the filter list.
+
+---
+
 <h1 align="center">I have unfortunately stopped developing this extension</h1>
 
 **This project has been archived as I'm no longer actively maintaining it. There are several reasons for this decision:**
