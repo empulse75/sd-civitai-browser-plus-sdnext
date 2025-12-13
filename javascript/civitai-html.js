@@ -1197,50 +1197,37 @@ function onPageLoad() {
     // *** New code for dropdown scroll fix ***
     const versionDropdown = gradioApp().querySelector('#quicksettings0');
     if (versionDropdown) {
-        let savedScrollY = 0;
-
-        versionDropdown.addEventListener('mousedown', () => {
-            savedScrollY = window.scrollY;
-        });
-
-        // Gradio often uses an internal input field for dropdowns
+        // Find the actual input element within the dropdown that gets focused
         const internalInput = versionDropdown.querySelector('input[type="text"]');
         if (internalInput) {
-            internalInput.addEventListener('focus', () => {
-                savedScrollY = window.scrollY;
-            });
-        }
+            // Store the original scrollIntoView method
+            const originalScrollIntoView = internalInput.scrollIntoView;
 
-        // Use a mutation observer to detect when the dropdown options become visible
-        // This is a more robust way to detect when Gradio has finished its DOM manipulations
-        const observer = new MutationObserver((mutationsList, observer) => {
-            for (const mutation of mutationsList) {
-                if (mutation.type === 'attributes' && mutation.attributeName === 'style') {
-                    // Check if the dropdown options are now visible
-                    // Gradio often makes the dropdown options visible by changing style properties
-                    const dropdownOptions = versionDropdown.querySelector('.options'); // Assuming a class 'options' for the dropdown list
-                    if (dropdownOptions && dropdownOptions.style.display !== 'none' && savedScrollY !== 0) {
-                        // Restore scroll position after a short delay
-                        setTimeout(() => {
-                            window.scrollTo(0, savedScrollY);
-                            savedScrollY = 0; // Reset after restoring
-                        }, 50); // Small delay to allow Gradio to finish its rendering
-                    }
+            // Override scrollIntoView to prevent automatic scrolling
+            internalInput.scrollIntoView = function(arg) {
+                // Check if the argument is an object with 'block' set to 'nearest' or 'center'
+                // This is a common pattern for Gradio's internal scrolling.
+                if (arg && typeof arg === 'object' && (arg.block === 'nearest' || arg.block === 'center')) {
+                    // Prevent the scroll if it's likely an automatic scroll from Gradio
+                    return;
                 }
+                // Otherwise, call the original scrollIntoView
+                originalScrollIntoView.apply(this, arguments);
+            };
+
+            // Additionally, add event listeners to prevent the immediate parent or grand-parent
+            // from scrolling when the internal input gains focus.
+            // This targets the Gradio dropdown wrapper directly.
+            const gradioDropdownContainer = internalInput.closest('.gradio-dropdown'); // Adjust selector as needed
+            if (gradioDropdownContainer) {
+                gradioDropdownContainer.addEventListener('focusin', (event) => {
+                    if (event.target === internalInput) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+                });
             }
-        });
-
-        // Start observing the dropdown element for attribute changes (style changes indicate visibility change)
-        observer.observe(versionDropdown, { attributes: true, subtree: true });
-
-        // Fallback for simple click events
-        versionDropdown.addEventListener('click', () => {
-            // Restore scroll position after a short delay
-            setTimeout(() => {
-                window.scrollTo(0, savedScrollY);
-                savedScrollY = 0; // Reset after restoring
-            }, 50);
-        });
+        }
     }
     // *** End new code ***
 
