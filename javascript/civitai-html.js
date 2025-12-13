@@ -1233,64 +1233,60 @@ function onPageLoad() {
     adjustFilterBoxAndButtons();
     updateBackToTopVisibility([{isIntersecting: false}]);
 
-    // *** New code for dropdown scroll fix ***
-    const versionDropdown = gradioApp().querySelector('#quicksettings0');
-    if (versionDropdown) {
-        // Find the actual input element within the dropdown that gets focused
-        const internalInput = versionDropdown.querySelector('input[type="text"]');
-        if (internalInput) {
-            // Store the original scrollIntoView method
-            const originalScrollIntoView = internalInput.scrollIntoView;
+    // *** Removed old dropdown scroll fix ***
+    // The previous implementation for preventing dropdown scroll issues is removed.
+    // The new `preventScrollOnFocus` function, defined below and called subsequently,
+    // will handle this behavior more comprehensively.
+    // *** End removed old code ***
 
-            // Override scrollIntoView to prevent automatic scrolling
-            internalInput.scrollIntoView = function(arg) {
-                // Check if the argument is an object with 'block' set to 'nearest' or 'center'
-                // This is a common pattern for Gradio's internal scrolling.
-                if (arg && typeof arg === 'object' && (arg.block === 'nearest' || arg.block === 'center')) {
-                    // Prevent the scroll if it's likely an automatic scroll from Gradio
-                    return;
-                }
-                // Otherwise, call the original scrollIntoView
-                originalScrollIntoView.apply(this, arguments);
-            };
-
-            // Additionally, add event listeners to prevent the immediate parent or grand-parent
-            // from scrolling when the internal input gains focus.
-            // This targets the Gradio dropdown wrapper directly.
-            const gradioDropdownContainer = internalInput.closest('.gradio-dropdown'); // Adjust selector as needed
-            if (gradioDropdownContainer) {
-                gradioDropdownContainer.addEventListener('focusin', (event) => {
-                    if (event.target === internalInput) {
-                        event.preventDefault();
-                        event.stopPropagation();
-                    }
-                });
-            }
-        }
-    }
-    // *** End new code ***
-
-    // Attempt to prevent scrolling on dropdown focus (previous attempt, keeping it for now)
+    // Apply the enhanced prevention for the quicksettings0 dropdown
     preventScrollOnFocus('#quicksettings0');
 }
 
-// Function to prevent unwanted scrolling for specific elements (keeping the previous helper function)
+// Function to prevent unwanted scrolling for specific elements
 function preventScrollOnFocus(selector) {
     const element = document.querySelector(selector);
     if (element) {
+        // Prevent mousedown events from causing scroll
         element.addEventListener('mousedown', (event) => {
+            event.preventDefault();
             event.stopPropagation();
-        });
+        }, { capture: true }); // Use capture phase to catch before Gradio's listeners
+
+        // Prevent focus events from causing scroll
         element.addEventListener('focus', (event) => {
             event.preventDefault();
             event.stopPropagation();
-        });
+        }, { capture: true });
+
+        // Prevent focusin events from causing scroll (for child elements)
+        element.addEventListener('focusin', (event) => {
+            event.preventDefault();
+            event.stopPropagation();
+        }, { capture: true });
+
         const internalInput = element.querySelector('input, textarea');
         if (internalInput) {
+            // Prevent mousedown events on internal input
+            internalInput.addEventListener('mousedown', (event) => {
+                event.preventDefault();
+                event.stopPropagation();
+            }, { capture: true });
+
+            // Prevent focus events on internal input
             internalInput.addEventListener('focus', (event) => {
                 event.preventDefault();
                 event.stopPropagation();
-            });
+            }, { capture: true });
+
+            // Override scrollIntoView for the internal input
+            const originalScrollIntoView = internalInput.scrollIntoView;
+            internalInput.scrollIntoView = function(arg) {
+                if (arg && typeof arg === 'object' && (arg.block === 'nearest' || arg.block === 'center')) {
+                    return; // Prevent automatic scroll from Gradio
+                }
+                originalScrollIntoView.apply(this, arguments);
+            };
         }
     }
 }
