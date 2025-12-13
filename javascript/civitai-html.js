@@ -79,6 +79,31 @@ function updateCardSize(width, height) {
     addOrUpdateRule(styleSheet, '.civmodelcard img', dimensionsKeyframes);
     addOrUpdateRule(styleSheet, '.civmodelcard .video-bg', dimensionsKeyframes);
     addOrUpdateRule(styleSheet, '.civmodelcard figcaption', textKeyframes);
+
+    // New logic for scaling checkbox size
+    // Assuming original card width was around 8em (based on the fontSize calculation)
+    // and original checkbox size was 30px.
+    const originalCardEm = 8;
+    const originalCheckboxPx = 30;
+    const originalCheckboxOffsetPx = 8; // top/right offset from style.css
+
+    const scaleFactor = width / originalCardEm; // Calculate how much the card width has scaled in 'em'
+    const newCheckboxPx = originalCheckboxPx * scaleFactor;
+    const newCheckboxOffsetPx = originalCheckboxOffsetPx * scaleFactor;
+
+    var checkboxKeyframes = `
+        width: ${newCheckboxPx}px !important;
+        min-width: ${newCheckboxPx}px !important;
+        height: ${newCheckboxPx}px !important;
+        top: ${newCheckboxOffsetPx}px !important;
+        right: ${newCheckboxOffsetPx}px !important;
+    `;
+    addOrUpdateRule(styleSheet, '.custom-checkbox', checkboxKeyframes);
+
+    // Also adjust the background-size for the checkmark inside the checkbox
+    // The 70% factor comes from the existing style.css rule for background-size
+    var checkmarkKeyframes = `background-size: ${newCheckboxPx * 0.7}px !important;`;
+    addOrUpdateRule(styleSheet, '.model-checkbox:checked + .custom-checkbox', checkmarkKeyframes);
 }
 
 // Toggles NSFW display
