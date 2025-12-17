@@ -52,7 +52,7 @@ def contenttype_folder(content_type, desc=None, fromCheck=False, custom_folder=N
         else:
             folder = os.path.join(main_models, "hypernetworks")
         
-    elif content_type == "TextualInversion":
+    elif content_type == "TextualInversion" or content_type == "Embeddings":
         if cmd_opts.embeddings_dir and not custom_folder:
             folder = cmd_opts.embeddings_dir
         else:

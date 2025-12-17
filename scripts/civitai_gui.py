@@ -658,7 +658,7 @@ def on_ui_settings():
         "LORA, LoCon, DoRA" if use_LORA else "LORA",
         "LoCon" if not use_LORA else None,
         "DoRA" if not use_LORA else None,
-        "TextualInversion", "Poses", "Controlnet", "Hypernetwork", "MotionModule",
+        "Embeddings", "Poses", "Controlnet", "Hypernetwork", "MotionModule",
         ("Upscaler", "SWINIR"), ("Upscaler", "REALESRGAN"), ("Upscaler", "GFPGAN"),
         ("Upscaler", "BSRGAN"), ("Upscaler", "ESRGAN"),
         "VAE", "AestheticGradient", "Wildcards", "Workflows", "Other"
